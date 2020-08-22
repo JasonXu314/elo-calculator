@@ -3,8 +3,8 @@ import { useState } from 'react';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-	const [p1, setP1] = useState({ name: '', elo: 1000 });
-	const [p2, setP2] = useState({ name: '', elo: 1000 });
+	const [p1, setP1] = useState({ name: '', elo: 1000, provisional: false });
+	const [p2, setP2] = useState({ name: '', elo: 1000, provisional: false });
 	const [winner, setWinner] = useState('p1');
 	const [result, setResult] = useState(null);
 
@@ -30,8 +30,9 @@ export default function Home() {
 							id="elo-1"
 							placeholder="ELO Rating"
 							onChange={(evt) => {
-								const elo = parseInt(evt.target.value);
-								setP1({ name: p1.name, elo: Number.isNaN(elo) ? null : elo });
+								const strElo = evt.target.value;
+								const elo = parseInt(strElo);
+								setP1({ name: p1.name, elo: strElo === '' ? '' : Number.isNaN(elo) ? p1.elo : elo });
 							}}
 							value={p1.elo}
 						/>
@@ -39,6 +40,8 @@ export default function Home() {
 					<div>
 						<label htmlFor="winner-1">Winner</label>
 						<input type="checkbox" id="winner-1" checked={winner === 'p1'} onChange={() => setWinner(winner === 'p1' ? 'p2' : 'p1')} />
+						<label htmlFor="provisional-1">Provisional?</label>
+						<input type="checkbox" id="provisional-1" checked={p1.provisional} onChange={() => setP1({ ...p1, provisional: !p1.provisional })} />
 					</div>
 				</div>
 				<div className={styles.card}>
@@ -55,15 +58,18 @@ export default function Home() {
 							id="elo-2"
 							placeholder="ELO Rating"
 							onChange={(evt) => {
-								const elo = parseInt(evt.target.value);
-								setP2({ name: p2.name, elo: Number.isNaN(elo) ? null : elo });
+								const strElo = evt.target.value;
+								const elo = parseInt(strElo);
+								setP2({ name: p2.name, elo: strElo === '' ? '' : Number.isNaN(elo) ? p2.elo : elo });
 							}}
-							value={p1.elo}
+							value={p2.elo}
 						/>
 					</div>
 					<div>
 						<label htmlFor="winner-2">Winner</label>
 						<input type="checkbox" id="winner-2" checked={winner === 'p2'} onChange={() => setWinner(winner === 'p2' ? 'p1' : 'p2')} />
+						<label htmlFor="provisional-2">Provisional?</label>
+						<input type="checkbox" id="provisional-2" checked={p2.provisional} onChange={() => setP2({ ...p2, provisional: !p2.provisional })} />
 					</div>
 				</div>
 			</div>
@@ -73,8 +79,8 @@ export default function Home() {
 						const eloOlda = p1.elo;
 						const score = winner === 'p1' ? 1 : 0;
 						const eloOldb = p2.elo;
-						const eloNewa = eloOlda + 64 * (score - 1 / (1 + 10 ** ((eloOldb - eloOlda) / 400)));
-						const eloNewb = eloOldb + 64 * (1 - score - 1 / (1 + 10 ** ((eloOlda - eloOldb) / 400)));
+						const eloNewa = eloOlda + (p1.provisional ? 32 : 64) * (score - 1 / (1 + 10 ** ((eloOldb - eloOlda) / 400)));
+						const eloNewb = eloOldb + (p2.provisional ? 32 : 64) * (1 - score - 1 / (1 + 10 ** ((eloOlda - eloOldb) / 400)));
 
 						setResult([eloNewa, eloNewb]);
 					}}>
