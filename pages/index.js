@@ -90,11 +90,11 @@ export default function Home() {
 					<div>
 						<div>
 							<h4>{p1.name}:</h4>
-							{result[0]}
+							{Math.round(result[0])}
 						</div>
 						<div>
 							<h4>{p2.name}:</h4>
-							{result[1]}
+							{Math.round(result[1])}
 						</div>
 					</div>
 				)}
