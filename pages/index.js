@@ -79,8 +79,8 @@ export default function Home() {
 						const eloOlda = p1.elo;
 						const score = winner === 'p1' ? 1 : 0;
 						const eloOldb = p2.elo;
-						const eloNewa = eloOlda + (p1.provisional ? 32 : 64) * (score - 1 / (1 + 10 ** ((eloOldb - eloOlda) / 400)));
-						const eloNewb = eloOldb + (p2.provisional ? 32 : 64) * (1 - score - 1 / (1 + 10 ** ((eloOlda - eloOldb) / 400)));
+						const eloNewa = eloOlda + (p2.provisional ? 32 : 64) * (score - 1 / (1 + 10 ** ((eloOldb - eloOlda) / 400)));
+						const eloNewb = eloOldb + (p1.provisional ? 32 : 64) * (1 - score - 1 / (1 + 10 ** ((eloOlda - eloOldb) / 400)));
 
 						setResult([eloNewa, eloNewb]);
 					}}>
