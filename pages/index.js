@@ -1,65 +1,98 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import { useState } from 'react';
+import styles from '../styles/Home.module.css';
 
 export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+	const [p1, setP1] = useState({ name: '', elo: 1000 });
+	const [p2, setP2] = useState({ name: '', elo: 1000 });
+	const [winner, setWinner] = useState('p1');
+	const [result, setResult] = useState(null);
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+	return (
+		<div className={styles.main}>
+			<Head>
+				<title>ELO Calculator</title>
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+			<div className={styles.row}>
+				<div className={styles.card}>
+					<div>
+						<label htmlFor="name-1">Name for P1</label>
+						<br />
+						<input type="text" id="name-1" placeholder="Name" onChange={(evt) => setP1({ name: evt.target.value, elo: p1.elo })} value={p1.name} />
+					</div>
+					<div>
+						<label htmlFor="name-1">ELO Rating for P1</label>
+						<br />
+						<input
+							type="text"
+							id="elo-1"
+							placeholder="ELO Rating"
+							onChange={(evt) => {
+								const elo = parseInt(evt.target.value);
+								setP1({ name: p1.name, elo: Number.isNaN(elo) ? null : elo });
+							}}
+							value={p1.elo}
+						/>
+					</div>
+					<div>
+						<label htmlFor="winner-1">Winner</label>
+						<input type="checkbox" id="winner-1" checked={winner === 'p1'} onChange={() => setWinner(winner === 'p1' ? 'p2' : 'p1')} />
+					</div>
+				</div>
+				<div className={styles.card}>
+					<div>
+						<label htmlFor="name-2">Name for P2</label>
+						<br />
+						<input type="text" id="name-2" placeholder="Name" onChange={(evt) => setP2({ name: evt.target.value, elo: p2.elo })} value={p2.name} />
+					</div>
+					<div>
+						<label htmlFor="name-2">ELO Rating for P2</label>
+						<br />
+						<input
+							type="text"
+							id="elo-2"
+							placeholder="ELO Rating"
+							onChange={(evt) => {
+								const elo = parseInt(evt.target.value);
+								setP2({ name: p2.name, elo: Number.isNaN(elo) ? null : elo });
+							}}
+							value={p1.elo}
+						/>
+					</div>
+					<div>
+						<label htmlFor="winner-2">Winner</label>
+						<input type="checkbox" id="winner-2" checked={winner === 'p2'} onChange={() => setWinner(winner === 'p2' ? 'p1' : 'p2')} />
+					</div>
+				</div>
+			</div>
+			<div className={styles.center}>
+				<button
+					onClick={() => {
+						const eloOlda = p1.elo;
+						const score = winner === 'p1' ? 1 : 0;
+						const eloOldb = p2.elo;
+						const eloNewa = eloOlda + 64 * (score - 1 / (1 + 10 ** ((eloOldb - eloOlda) / 400)));
+						const eloNewb = eloOldb + 64 * (1 - score - 1 / (1 + 10 ** ((eloOlda - eloOldb) / 400)));
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+						setResult([eloNewa, eloNewb]);
+					}}>
+					{!result ? 'Calculate' : 'Recalculate'}
+				</button>
+				{result && (
+					<div>
+						<div>
+							<h4>{p1.name}:</h4>
+							{result[0]}
+						</div>
+						<div>
+							<h4>{p2.name}:</h4>
+							{result[1]}
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
 }
