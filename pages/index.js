@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import styles from '../styles/Home.module.css';
+import { calculateElo } from '../utils/utils';
 
 export default function Home() {
 	const [p1, setP1] = useState({ name: '', elo: 1000, provisional: false });
@@ -11,7 +12,7 @@ export default function Home() {
 	return (
 		<div className={styles.main}>
 			<Head>
-				<title>ELO Calculator</title>
+				<title>ELO Calculator | Single Match</title>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
@@ -77,12 +78,12 @@ export default function Home() {
 				<button
 					onClick={() => {
 						const eloOlda = p1.elo;
-						const score = winner === 'p1' ? 1 : 0;
 						const eloOldb = p2.elo;
-						const eloNewa = eloOlda + (p2.provisional ? 32 : 64) * (score - 1 / (1 + 10 ** ((eloOldb - eloOlda) / 400)));
-						const eloNewb = eloOldb + (p1.provisional ? 32 : 64) * (1 - score - 1 / (1 + 10 ** ((eloOlda - eloOldb) / 400)));
+						const aProvisional = p1.provisional;
+						const bProvisional = p2.provisional;
+						const score = winner === 'p1' ? 1 : 0;
 
-						setResult([eloNewa, eloNewb]);
+						setResult(calculateElo(eloOlda, eloOldb, aProvisional, bProvisional, score));
 					}}>
 					{!result ? 'Calculate' : 'Recalculate'}
 				</button>
