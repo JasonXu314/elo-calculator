@@ -236,36 +236,26 @@ export default function WholeRound() {
 					<button
 						onClick={() => {
 							const newContestants = [...contestants];
-							newContestants.forEach((contestant) => {
-								const round1Opponent = newContestants.find((c) => c.name === contestant.rounds[0].opponent);
-								const after1 = calculateElo(
-									contestant.elo,
-									round1Opponent.elo,
-									contestant.provisional,
-									round1Opponent.provisional,
-									contestant.rounds[0].win ? 1 : -1
-								)[0];
-								const round2Opponent = newContestants.find((c) => c.name === contestant.rounds[1].opponent);
-								const after2 = calculateElo(
-									contestant.elo,
-									round2Opponent.elo,
-									contestant.provisional,
-									round2Opponent.provisional,
-									contestant.rounds[1].win ? 1 : -1
-								)[0];
-								const round3Opponent = newContestants.find((c) => c.name === contestant.rounds[2].opponent);
-								const after3 = calculateElo(
-									contestant.elo,
-									round3Opponent.elo,
-									contestant.provisional,
-									round3Opponent.provisional,
-									contestant.rounds[2].win ? 1 : -1
-								)[0];
 
-								contestant.rounds[0].eloAfter = after1;
-								contestant.rounds[1].eloAfter = after2;
-								contestant.rounds[2].eloAfter = after3;
-							});
+							for (const round of [0, 1, 2]) {
+								newContestants.forEach((contestant) => {
+									const opponent = newContestants.find((c) => c.name === contestant.rounds[round].opponent);
+
+									const elo = round === 0 ? contestant.elo : contestant.rounds[round - 1].eloAfter;
+									const opponentElo = round === 0 ? opponent.elo : opponent.rounds[round - 1].eloAfter;
+
+									const [after, oppAfter] = calculateElo(
+										elo,
+										opponentElo,
+										contestant.provisional,
+										opponent.provisional,
+										contestant.rounds[round].win ? 1 : -1
+									);
+									contestant.rounds[round].eloAfter = Math.round(after);
+									opponent.rounds[round].eloAfter = Math.round(oppAfter);
+								});
+							}
+
 							setContestants(newContestants);
 						}}>
 						Calculate
