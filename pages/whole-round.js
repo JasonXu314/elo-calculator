@@ -213,22 +213,22 @@ export default function WholeRound() {
 									setContestantIndex(i);
 								}}>
 								<h3>{contestant.name}</h3>
-								<code>{contestant.elo}</code>
+								<code>Starting Elo: {contestant.elo}</code>
 								{contestant.provisional && <p>Provisional</p>}
 								<div>
 									<h4>{contestant.rounds[0].opponent}:</h4>
-									{contestant.rounds[0].win ? 'Win' : 'Loss'}
-									{contestant.rounds[0].eloAfter && <p>{contestant.rounds[0].eloAfter}</p>}
+									{contestant.rounds[0].win ? 'Win' : 'Loss'} |{' '}
+									{contestant.rounds[0].eloAfter && <code>Elo: {contestant.rounds[0].eloAfter}</code>}
 								</div>
 								<div>
 									<h4>{contestant.rounds[1].opponent}:</h4>
-									{contestant.rounds[1].win ? 'Win' : 'Loss'}
-									{contestant.rounds[1].eloAfter && <p>{contestant.rounds[1].eloAfter}</p>}
+									{contestant.rounds[1].win ? 'Win' : 'Loss'} |{' '}
+									{contestant.rounds[1].eloAfter && <code>Elo: {contestant.rounds[1].eloAfter}</code>}
 								</div>
 								<div>
 									<h4>{contestant.rounds[2].opponent}:</h4>
-									{contestant.rounds[2].win ? 'Win' : 'Loss'}
-									{contestant.rounds[2].eloAfter && <p>{contestant.rounds[2].eloAfter}</p>}
+									{contestant.rounds[2].win ? 'Win' : 'Loss'} |{' '}
+									{contestant.rounds[2].eloAfter && <code>Elo: {contestant.rounds[2].eloAfter}</code>}
 								</div>
 							</div>
 						))}

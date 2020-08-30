@@ -17,6 +17,10 @@
 	margin-right: 1ch;
 }
 
+.main .row .card div code {
+	display: inline;
+}
+
 .main .row .card h4,
 .main .row .card h3 {
 	margin: 0;
